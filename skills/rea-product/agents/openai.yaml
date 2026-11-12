@@ -1,0 +1,4 @@
+interface:
+  display_name: "Rea-Product"
+  short_description: "Deep product teardown and executable rebuild plans"
+  default_prompt: "Use $rea-product to analyze this product from its video, image with explanation, or URL and create an evidence-backed plan to build an equivalent."

@@ -2,3 +2,9 @@ rea-video
 Copyright 2026 JuneYaooo
 
 Licensed under the Apache License, Version 2.0.
+
+Rea-Product is derived from Rea-Video (https://github.com/JuneYaooo/rea-video).
+Original copyright and Apache-2.0 license are retained in LICENSE and upstream files.
+Rea-Product additions (2026): product/service/technology analysis workflow, evidence intake,
+analysis validation, Arabic-capable report rendering, and Rea-Product documentation.
+Upstream video-analysis code remains unchanged.

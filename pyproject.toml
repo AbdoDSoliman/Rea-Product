@@ -3,9 +3,9 @@ requires = ["setuptools>=64"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "rea-video"
+name = "rea-product"
 version = "0.1.0"
-description = "Reverse engineer any video: shot-level production-method forensics (live action / AI video / code render / mixed) and remake planning."
+description = "Evidence-led product, service and technology teardown and implementation planning, derived from Rea-Video."
 readme = "README.md"
 requires-python = ">=3.10"
 license = { text = "Apache-2.0" }
@@ -32,10 +32,11 @@ asr = ["sherpa-onnx>=1.12"]
 dev = ["pytest>=7", "jsonschema>=4"]
 
 [project.scripts]
+rea-product = "rea_product.cli:main"
 rea-video = "rea_video.cli:main"
 
 [tool.setuptools.packages.find]
-include = ["rea_video*"]
+include = ["rea_video*", "rea_product*"]
 
 [tool.setuptools.package-data]
 rea_video = ["capabilities/*.yaml", "capabilities/*.json", "capabilities/*.md", "capabilities/models/*.yaml"]
