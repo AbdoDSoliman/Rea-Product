@@ -23,3 +23,48 @@ The top-level analysis has:
 9. `risks_and_unknowns`: unresolved facts, contradictory evidence, limits of observed sources, reproduction gaps and prioritized verification experiments.
 
 Do not use placeholder prose to satisfy required fields. If a topic is inapplicable explain why briefly. Reports must be clear when only a single static image was inspected; never invent observed transitions.
+
+## Optional visual presentation (backward compatible with version 1)
+
+`presentation` adds editorial framing without changing claims, evidence or test status:
+
+```json
+{
+  "presentation": {
+    "title": "Short product-specific title",
+    "summary": "What can be rebuilt, the mechanism and the main unresolved gap.",
+    "hero_image": "evidence/S1/001.jpg",
+    "hero_caption": "Inspected frame at 00:12",
+    "sections": {
+      "experience": {
+        "summary": "A concise account of the journey.",
+        "cards": [
+          {"title": "Import", "text": "Observed action [E1].", "image": "evidence/S1/001.jpg", "caption": "00:12 · E1"}
+        ]
+      },
+      "implementation": {
+        "summary": "Resolve the hardest assumption before building the full editor.",
+        "cards": [{"title": "Proof of concept", "text": "Dependencies, deliverables, owner, effort and acceptance gate."}]
+      }
+    }
+  }
+}
+```
+
+Each of the nine section keys may have `summary`, `image`, `caption`, and `cards`.
+Cards require `title` and `text`; `image` and `caption` are optional. These are
+agent-authored content, never generated observations or inferred measurements.
+The renderer preserves every complete section behind a labeled disclosure.
+Old analyses without this object still render with readable fallbacks.
+
+Evidence entries may include `image`, an inspected raster asset relative to the
+analysis directory. Only existing PNG/JPEG/WebP/GIF files within that directory
+are embedded. Absolute paths outside the directory, traversal, SVG and remote
+media are not embedded. Missing images leave the textual evidence intact.
+Use explicit image fields rather than hiding file paths in prose. The gallery
+contains evidence entries, not unreviewed uniform frames.
+
+HTML outputs: `report.html` and `report-evidence.html`. The latter name avoids
+replacing an independently authored `evidence-gallery.html`. CSS and interaction
+code are embedded; there are no required CDNs or network fonts. Local raster
+assets must travel with the report. Markdown remains the full textual export.

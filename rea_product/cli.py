@@ -5,7 +5,6 @@ No model claims are fabricated by this CLI. It works without API credentials.
 from __future__ import annotations
 import argparse
 import hashlib
-import html
 import json
 import shutil
 import subprocess
@@ -145,6 +144,29 @@ def validate(data):
             raise ValueError('Observed/inferred claims require evidence')
         if state in ('inferred', 'unknown') and not nonempty(item.get('verification')):
             raise ValueError('Inferred/unknown claims require a verification step')
+    presentation = data.get('presentation', {})
+    if not isinstance(presentation, dict):
+        raise ValueError('presentation must be an object')
+    for key in ('title', 'summary', 'hero_image', 'hero_caption'):
+        if key in presentation and not isinstance(presentation[key], str):
+            raise ValueError(f'presentation.{key} must be text')
+    annotations = presentation.get('sections', {})
+    if not isinstance(annotations, dict) or any(k not in SECTIONS for k in annotations):
+        raise ValueError('presentation.sections must use known section keys')
+    for annotation in annotations.values():
+        if not isinstance(annotation, dict):
+            raise ValueError('Section presentation must be an object')
+        for key in ('summary', 'image', 'caption'):
+            if key in annotation and not isinstance(annotation[key], str):
+                raise ValueError(f'Section {key} must be text')
+        cards = annotation.get('cards', [])
+        if not isinstance(cards, list):
+            raise ValueError('Presentation cards must be a list')
+        for card in cards:
+            if not isinstance(card, dict) or not all(nonempty(card.get(k)) for k in ('title', 'text')):
+                raise ValueError('Presentation cards require title and text')
+            if any(k in card and not isinstance(card[k], str) for k in ('image', 'caption')):
+                raise ValueError('Card image/caption must be text')
     tests = data.get('parity_tests', [])
     if not isinstance(tests, list) or not tests:
         raise ValueError('Behavioral parity tests are required')
@@ -175,25 +197,12 @@ def report(args):
         parts.append(f"- {item['feature']} [{item['status']}]\n  {item['procedure']}\n  Expected: {item['expected']}\n  Result: {item.get('result_evidence', 'Not executed')}")
     markdown = '\n\n'.join(parts) + '\n'
     (out / 'report.md').write_text(markdown, encoding='utf-8')
-    direction = 'rtl' if data['language'].lower().startswith('ar') else 'ltr'
-    body = []
-    for part in parts:
-        if part.startswith('# '):
-            body.append('<h1>' + html.escape(part[2:]) + '</h1>')
-        elif part.startswith('## '):
-            body.append('<h2>' + html.escape(part[3:]) + '</h2>')
-        else:
-            body.append('<div class="text">' + html.escape(part) + '</div>')
-    document = ('<!doctype html><html lang="' + html.escape(data['language'], quote=True) + '" dir="' + direction + '">'
-                '<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">'
-                '<title>' + html.escape(data['name']) + '</title><style>'
-                'body{max-width:1000px;margin:40px auto;padding:24px;background:#faf9f5;color:#202a30;'
-                'font:17px/1.8 system-ui,sans-serif}h1{font-size:2.5rem}h2{border-bottom:1px solid #bbb;'
-                'padding-top:28px;color:#12685b}.text{white-space:pre-wrap;overflow-wrap:anywhere;margin:16px 0}'
-                '@media print{body{margin:0;max-width:none}h2{break-after:avoid}}</style>' + ''.join(body) + '</html>')
+    from .rendering import render_documents
+    document, gallery = render_documents(data, out, LABELS)
+    (out / 'report-evidence.html').write_text(gallery, encoding='utf-8')
     (out / 'report.html').write_text(document, encoding='utf-8')
     (out / 'PRODUCT.md').write_text(f"# {data['name']}\n\n" + data['sections']['overview'] + '\n\n'
-                                  '## Files\n- report.html — human report\n- report.md — readable full report\n'
+                                  '## Files\n- report.html — visual report\n- report-evidence.html — evidence gallery\n- report.md — readable full report\n'
                                   '- analysis.json — claims, evidence, build plan and parity tests\n'
                                   '- sources.json — original inputs and sampled frames\n', encoding='utf-8')
     print(out / 'report.html')

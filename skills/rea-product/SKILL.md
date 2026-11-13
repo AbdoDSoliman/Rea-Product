@@ -63,12 +63,12 @@ The default deliverable is analysis plus a build specification. Actually buildin
 
 ## Review and delivery
 
-Use [the report contract](references/report-contract.md) to populate `analysis.json`. Recheck weak claims against the original media and ensure every essential module has a build path and test. Resolve contradictions where possible and retain competing explanations when evidence cannot decide. Clearly label the proposed stack throughout prose as well as in the claims ledger.
+Use [the report contract](references/report-contract.md) to populate `analysis.json`. Read [report presentation](references/report-presentation.md) before preparing the deliverable. Recheck weak claims against the original media and ensure every essential module has a build path and test. Resolve contradictions where possible and retain competing explanations when evidence cannot decide. Clearly label the proposed stack throughout prose as well as in the claims ledger.
 
 ```bash
 python3 -m rea_product report out/product
 ```
 
-This checks required content, evidence references and test status, and produces `report.md`, `report.html` (RTL for Arabic), and the compact `PRODUCT.md`. Validation verifies structure, not truth; you remain responsible for evidence quality. Never set status complete while required sections are empty or supply invented observations to satisfy validation. If all evidence is inaccessible, deliver a clearly marked blocked/draft note with what is needed instead.
+This checks required content, evidence references and test status, and produces `report.md`, a visual `report.html` (RTL for Arabic), `report-evidence.html`, and the compact `PRODUCT.md`. For substantial analyses, author the optional `presentation` fields: a concise decision summary, an inspected hero image when useful, and section summaries/cards that make the journey, components and milestones scannable. Keep the complete analysis in the nine sections; do not replace it with marketing copy. Preview desktop and mobile layouts and exercise navigation, evidence links and test search before delivery when browser tools are available. Validation verifies structure, not truth; you remain responsible for evidence quality. Never set status complete while required sections are empty or supply invented observations to satisfy validation. If all evidence is inaccessible, deliver a clearly marked blocked/draft note with what is needed instead.
 
 Lead the response with what can be reproduced, the core mechanism and the most important unknown. Summarize the proposed approach and next executable step, and link the report. Match the user's depth request; don't dump the raw JSON in chat.
